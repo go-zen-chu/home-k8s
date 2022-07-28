@@ -5,7 +5,7 @@ resources:
 - ./ingress/nginx-ingress-controller.yaml
 - ./monitoring/namespace.yaml
 - ./monitoring/prometheus.yaml
-#- ./monitoring/node-exporter.yaml
+- ./monitoring/node-exporter.yaml
 - ./monitoring/blackbox-exporter.yaml
 - ./monitoring/speedtest-exporter.yaml
 - ./monitoring/grafana-dashboard-etcd.yaml
