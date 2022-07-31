@@ -103,13 +103,11 @@ data:
     providers:
     - name: 'dashboards'
       orgId: 1
-      folder: ''
       type: file
       disableDeletion: true
-      editable: false
+      editable: true
       options:
         path: /etc/grafana/provisioning/dashboards
-        foldersFromFilesStructure: true
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -141,15 +139,15 @@ spec:
         - name: dashboard-provider-config-volume
           mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-node-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
+          mountPath: /etc/grafana/provisioning/dashboards/node-exporter
         - name: dashboard-kubernetes-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
+          mountPath: /etc/grafana/provisioning/dashboards/kubernetes
         - name: dashboard-prometheus-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
+          mountPath: /etc/grafana/provisioning/dashboards/prometheus
         - name: dashboard-etcd-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
+          mountPath: /etc/grafana/provisioning/dashboards/etcd
         - name: dashboard-speedtest-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
+          mountPath: /etc/grafana/provisioning/dashboards/speedtest-exporter
         env:
         #- name: GF_AUTH_ANONYMOUS_ENABLED
         #  value: "true"
