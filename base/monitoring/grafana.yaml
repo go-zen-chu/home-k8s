@@ -141,15 +141,15 @@ spec:
         - name: dashboard-provider-config-volume
           mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-node-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/nodes/
+          mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-kubernetes-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/kubernetes/
+          mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-prometheus-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/prometheus/
+          mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-etcd-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/etcd/
+          mountPath: /etc/grafana/provisioning/dashboards/
         - name: dashboard-speedtest-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/speedtest-exporter/
+          mountPath: /etc/grafana/provisioning/dashboards/
         env:
         #- name: GF_AUTH_ANONYMOUS_ENABLED
         #  value: "true"
