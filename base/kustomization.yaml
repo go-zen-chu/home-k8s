@@ -1,6 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
 - ./ingress/nginx-ingress-controller.yaml
 - ./monitoring/namespace.yaml
@@ -14,3 +13,8 @@ resources:
 - ./monitoring/grafana-dashboard-prometheus.yaml
 - ./monitoring/grafana-dashboard-speedtest.yaml
 - ./monitoring/grafana.yaml
+- ./argocd/namespace.yaml
+- ./argocd/argocd.yaml
+- ./argocd/argocd-vault-plugin-cmp-plugin-configmap.yaml
+patchesStrategicMerge:
+- ./argocd/argocd-vault-plugin-repo-server-patch.yaml

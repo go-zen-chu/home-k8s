@@ -1,0 +1,48 @@
+# https://argocd-vault-plugin.readthedocs.io/en/stable/installation/#initcontainer-and-configuration-via-sidecar
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cmp-plugin
+  namespace: argocd
+data:
+  avp.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-vault-plugin
+    spec:
+      allowConcurrency: true
+      discover:
+        find:
+          command:
+            - sh
+            - "-c"
+            - "find . -name '*.yaml' | xargs -I {} grep \"<path\\|avp\\.kubernetes\\.io\" {} | grep ."
+      generate:
+        command:
+          - argocd-vault-plugin
+          - generate
+          - "."
+      lockRepo: false
+  # this force argocd to use vault-plugin when applying manifest via kustomize
+  # https://argocd-vault-plugin.readthedocs.io/en/stable/usage/#with-kustomize
+  avp-kustomize.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-vault-plugin-kustomize
+    spec:
+      allowConcurrency: true
+      discover:
+        find:
+          command:
+            - find
+            - "."
+            - -name
+            - kustomization.yaml
+      generate:
+        command:
+          - sh
+          - "-c"
+          - "kustomize build . | argocd-vault-plugin generate -s vault-configuration -"
+      lockRepo: false
