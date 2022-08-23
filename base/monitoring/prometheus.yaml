@@ -96,10 +96,6 @@ spec:
     metadata:
       labels:
         app: prometheus
-      annotations:
-        # annotations for sd in prometheus
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9090"
     spec:
       serviceAccountName: prometheus # specify service account for service discovery
       containers:

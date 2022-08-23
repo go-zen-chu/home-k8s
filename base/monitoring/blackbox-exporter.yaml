@@ -12,11 +12,6 @@ spec:
     metadata:
       labels:
         app: blackbox-exporter
-      # blackbox-exporter requires different scrape setting than other exporters
-      #annotations:
-      #  # annotations for sd in prometheus
-      #  prometheus.io/scrape: "true"
-      #  prometheus.io/port: "9115"
     spec:
       containers:
       - name: blackbox-exporter

@@ -15,6 +15,7 @@ spec:
         app: node-exporter
       annotations:
         # annotations for sd in prometheus
+        # this enables prometheus to get metrics directly from pod
         prometheus.io/scrape: "true"
         prometheus.io/port: "9100"
     spec:

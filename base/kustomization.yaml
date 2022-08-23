@@ -6,6 +6,7 @@ resources:
 - ./monitoring/prometheus.yaml
 - ./monitoring/node-exporter.yaml
 - ./monitoring/blackbox-exporter.yaml
+- ./monitoring/kube-state-metrics.yaml
 - ./monitoring/speedtest-exporter.yaml
 - ./monitoring/grafana-dashboard-etcd.yaml
 - ./monitoring/grafana-dashboard-kubernetes.yaml
