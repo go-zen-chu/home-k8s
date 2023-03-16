@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs
+  namespace: vault
+  annotations:
+    avp.kubernetes.io/path: "home-k8s/vault"
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: <persistent-volume-nfs-ip>
+    path: <persistent-volume-nfs-volume-path>

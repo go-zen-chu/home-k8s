@@ -25,11 +25,6 @@ spec:
     metadata:
       labels:
         app: speedtest-exporter
-      # comment annotation for changing scrape interval for speedtest
-      #annotations:
-      #  # annotations for sd in prometheus
-      #  prometheus.io/scrape: "true"
-      #  prometheus.io/port: "9112"
     spec:
       containers:
       - name: speedtest-exporter
