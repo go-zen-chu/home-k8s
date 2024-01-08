@@ -2,15 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ./ingress/nginx-ingress-controller.yaml
-- ./monitoring/namespace.yaml
-- ./monitoring/prometheus.yaml
-- ./monitoring/node-exporter.yaml
-- ./monitoring/blackbox-exporter.yaml
-- ./monitoring/speedtest-exporter.yaml
-- ./monitoring/grafana-dashboard-etcd.yaml
-- ./monitoring/grafana-dashboard-kubernetes.yaml
-- ./monitoring/grafana-dashboard-node-exporter.yaml
-- ./monitoring/grafana-dashboard-prometheus.yaml
-- ./monitoring/grafana-dashboard-speedtest.yaml
-- ./monitoring/grafana.yaml
+  - ./monitoring/namespace.yaml
+  - ./monitoring/prometheus.yaml
+  - ./monitoring/node-exporter.yaml
+  - ./monitoring/blackbox-exporter.yaml
+  - ./monitoring/speedtest-exporter.yaml
+  - ./monitoring/grafana-dashboard-etcd.yaml
+  - ./monitoring/grafana-dashboard-kubernetes.yaml
+  - ./monitoring/grafana-dashboard-node-exporter.yaml
+  - ./monitoring/grafana-dashboard-prometheus.yaml
+  - ./monitoring/grafana-dashboard-speedtest.yaml
+  - ./monitoring/grafana.yaml
