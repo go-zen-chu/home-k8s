@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: prometheus
 rules:
-- apiGroups: [""]
-  resources:
-  - nodes
-  - nodes/proxy
-  - services
-  - endpoints
-  - pods
-  verbs: ["get", "list", "watch"]
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs: ["get", "list", "watch"]
-- nonResourceURLs: ["/metrics"]
-  verbs: ["get"]
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs: ["get", "list", "watch"]
+  - nonResourceURLs: ["/metrics"]
+    verbs: ["get"]
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -35,9 +35,9 @@ roleRef:
   kind: ClusterRole
   name: prometheus
 subjects:
-- kind: ServiceAccount
-  name: prometheus
-  namespace: monitoring
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitoring
 ---
 # setup ingress, service config
 apiVersion: v1
@@ -49,9 +49,9 @@ spec:
   selector:
     app: prometheus
   ports:
-  - protocol: TCP
-    port: 9090
-    targetPort: 9090 # set prometheus container port
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090 # set prometheus container port
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -62,17 +62,17 @@ metadata:
     # rewrite url after /prometheus/xxx -> /xxx for prometheus
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
-  - http:
-      paths:
-      - path: /prometheus(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: prometheus
-            port:
-              number: 9090
+    - http:
+        paths:
+          - path: /prometheus(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
 ---
 # Finally, deployment for deploying prometheus
 apiVersion: apps/v1
@@ -103,33 +103,33 @@ spec:
     spec:
       serviceAccountName: prometheus # specify service account for service discovery
       containers:
-      - name: prometheus
-        image: quay.io/prometheus/prometheus:v2.22.2
-        imagePullPolicy: IfNotPresent
-        args:
-          - '--storage.tsdb.retention.size=100GB' # set size based metrics storage
-          - '--storage.tsdb.path=/prometheus'
-          - '--config.file=/etc/prometheus/prometheus.yml'
-          - '--web.external-url=http://localhost:80/prometheus' # for nginx proxy
-          - '--web.route-prefix=/'
-        command:
-        - /bin/prometheus
-        ports:
-        - name: web
-          containerPort: 9090
-        volumeMounts:
-        # mount prometheus config to the path below
-        - name: config-volume
-          mountPath: /etc/prometheus
-        - name: data
-          mountPath: /prometheus
+        - name: prometheus
+          image: quay.io/prometheus/prometheus:v2.22.2
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--storage.tsdb.retention.size=100GB" # set size based metrics storage
+            - "--storage.tsdb.path=/prometheus"
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--web.external-url=http://localhost:80/prometheus" # for nginx proxy
+            - "--web.route-prefix=/"
+          command:
+            - /bin/prometheus
+          ports:
+            - name: web
+              containerPort: 9090
+          volumeMounts:
+            # mount prometheus config to the path below
+            - name: config-volume
+              mountPath: /etc/prometheus
+            - name: data
+              mountPath: /prometheus
       restartPolicy: Always
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: config-volume
-        configMap:
-          name: prometheus-config
-      # where metrics data stored
-      - name: data
-        emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+        # where metrics data stored
+        - name: data
+          emptyDir: {}

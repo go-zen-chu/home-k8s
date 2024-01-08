@@ -8,9 +8,9 @@ spec:
   selector:
     app: grafana
   ports:
-  - protocol: TCP
-    port: 3000
-    targetPort: 3000
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -21,17 +21,17 @@ metadata:
     # rewrite url after /prometheus/xxx -> /xxx for prometheus
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
-  - http:
-      paths:
-      - path: /grafana(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000
+    - http:
+        paths:
+          - path: /grafana(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
 ---
 # https://grafana.com/docs/grafana/latest/administration/provisioning/
 # should be mounted to /etc/grafana/provisioning/datasources
@@ -127,55 +127,55 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: registry.hub.docker.com/grafana/grafana:8.3.3
-        imagePullPolicy: IfNotPresent
-        name: grafana
-        ports:
-        - containerPort: 3000
-          name: http
-        volumeMounts:
-        - name: datasource-config-volume
-          mountPath: /etc/grafana/provisioning/datasources/
-        - name: dashboard-provider-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/
-        - name: dashboard-node-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/node-exporter
-        - name: dashboard-kubernetes-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/kubernetes
-        - name: dashboard-prometheus-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/prometheus
-        - name: dashboard-etcd-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/etcd
-        - name: dashboard-speedtest-exporter-config-volume
-          mountPath: /etc/grafana/provisioning/dashboards/speedtest-exporter
-        env:
-        #- name: GF_AUTH_ANONYMOUS_ENABLED
-        #  value: "true"
-        - name: GF_SERVER_ROOT_URL
-          value: "http://localhost:80/grafana"
-        #- name: GF_SERVER_SERVE_FROM_SUB_PATH
-        #  value: "true"
-        #- name: GF_INSTALL_PLUGINS
-        #  value: grafana-clock-panel,grafana-simple-json-datasource
+        - image: registry.hub.docker.com/grafana/grafana:8.3.3
+          imagePullPolicy: IfNotPresent
+          name: grafana
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - name: datasource-config-volume
+              mountPath: /etc/grafana/provisioning/datasources/
+            - name: dashboard-provider-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/
+            - name: dashboard-node-exporter-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/node-exporter
+            - name: dashboard-kubernetes-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/kubernetes
+            - name: dashboard-prometheus-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/prometheus
+            - name: dashboard-etcd-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/etcd
+            - name: dashboard-speedtest-exporter-config-volume
+              mountPath: /etc/grafana/provisioning/dashboards/speedtest-exporter
+          env:
+            #- name: GF_AUTH_ANONYMOUS_ENABLED
+            #  value: "true"
+            - name: GF_SERVER_ROOT_URL
+              value: "http://localhost:80/grafana"
+          #- name: GF_SERVER_SERVE_FROM_SUB_PATH
+          #  value: "true"
+          #- name: GF_INSTALL_PLUGINS
+          #  value: grafana-clock-panel,grafana-simple-json-datasource
       volumes:
-      - name: datasource-config-volume
-        configMap:
-          name: grafana-datasource-config
-      - name: dashboard-provider-config-volume
-        configMap:
-          name: grafana-dashboard-provider-config
-      - name: dashboard-node-exporter-config-volume
-        configMap:
-          name: grafana-dashboard-node-exporter-config
-      - name: dashboard-kubernetes-config-volume
-        configMap:
-          name: grafana-dashboard-kubernetes-config
-      - name: dashboard-prometheus-config-volume
-        configMap:
-          name: grafana-dashboard-prometheus-config
-      - name: dashboard-etcd-config-volume
-        configMap:
-          name: grafana-dashboard-etcd-config
-      - name: dashboard-speedtest-exporter-config-volume
-        configMap:
-          name: grafana-dashboard-speedtest-exporter-config
+        - name: datasource-config-volume
+          configMap:
+            name: grafana-datasource-config
+        - name: dashboard-provider-config-volume
+          configMap:
+            name: grafana-dashboard-provider-config
+        - name: dashboard-node-exporter-config-volume
+          configMap:
+            name: grafana-dashboard-node-exporter-config
+        - name: dashboard-kubernetes-config-volume
+          configMap:
+            name: grafana-dashboard-kubernetes-config
+        - name: dashboard-prometheus-config-volume
+          configMap:
+            name: grafana-dashboard-prometheus-config
+        - name: dashboard-etcd-config-volume
+          configMap:
+            name: grafana-dashboard-etcd-config
+        - name: dashboard-speedtest-exporter-config-volume
+          configMap:
+            name: grafana-dashboard-speedtest-exporter-config
